@@ -1,9 +1,19 @@
-import { signIn, signOut } from "next-auth/react"
+import { signIn, signOut, useSession } from "next-auth/react"
+import {useRouter} from "next/router"
 
 const Home = () => {
+    const { data: session, status } = useSession()
+    const router = useRouter()
+    console.log(status)
+
     return (
 	<div>
-	    <button onClick={() => signOut()}>Sign out</button> 
+	    {
+		status === 'unauthenticated' ?
+		<button onClick={() => router.push('/auth/registration')}>Sign in/up</button>
+		:
+		<button onClick={() => signOut()}>Sign out</button> 
+	    }
 	</div>
     )
 }

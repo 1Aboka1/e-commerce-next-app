@@ -5,8 +5,8 @@ module.exports = {
 	extend: {
 	    colors: {
 		'tropical-blue': {
-		    400: '#BED5EB',
-		    500: '#BED5EB',
+		    400: '#89b4ff',
+		    500: '#89b4ff',
 		},
 	    },
 	},

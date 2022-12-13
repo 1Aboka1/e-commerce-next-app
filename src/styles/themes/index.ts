@@ -3,7 +3,7 @@ import { createTheme, experimental_sx as sx } from "@mui/material/styles"
 export const theme = createTheme({
     palette: {
 	primary: {
-	    main: "#BED5EB",
+	    main: "#89b4ff",
 	},
 	secondary: {
 	    main: '#b2d2fd',

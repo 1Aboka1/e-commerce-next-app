@@ -2,6 +2,7 @@ import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@mui/material";
+import NextNProgress from "nextjs-progressbar";
 
 import { trpc } from "../utils/trpc";
 
@@ -15,6 +16,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <ThemeProvider theme={theme}>
 	<SessionProvider session={session}>
+	    <NextNProgress/>
 	    <Component {...pageProps} />
 	</SessionProvider>
     </ThemeProvider>
