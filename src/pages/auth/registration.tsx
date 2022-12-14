@@ -92,11 +92,34 @@ const EmailTab = ({ tabControl, formControl, errors }: any) => {
 	    <Button type='submit' onClick={() => tabControl('names')} variant='text' size="small" color="secondary" className="rounded-xl w-full capitalize font-semibold text-md text-neutral-600 p-2"><ArrowBackIcon/>Назад</Button> 
 		</div>
 		<div className="justify-center flex flex-col space-y-3 w-full">
-		    <TextField {...formControl('email')} variant="outlined" size='small' fullWidth label='Email'/>
-		    <TextField {...formControl('password')} type='password' variant="outlined" size='small' fullWidth label='Пароль'/>
-		    <TextField {...formControl('repeatPassword', { required: true })} type='password' variant="outlined" size='small' fullWidth label='Повторите пароль'/>
-		    {errors.password && <span>This field is required</span>}
-		</div> <div className="flex flex-col items-center">
+		    <TextField 
+			{...formControl('email')} 
+			variant="outlined" 
+			size='small' 
+			fullWidth 
+			label='Email'
+			color={errors.email && 'error'}
+		    />
+		    <TextField 
+			{...formControl('password', { required: true })} 
+			type='password' 
+			variant="outlined" 
+			size='small' 
+			fullWidth 
+			label='Пароль'
+			color={errors.password && 'error'}
+		    />
+		    <TextField 
+			{...formControl('repeatPassword', { required: true })} 
+			type='password' 
+			variant="outlined" 
+			size='small' 
+			fullWidth 
+			label='Повторите пароль'
+			color={errors.repeatPassword && 'error'}
+		    />
+		</div> 
+		<div className="flex flex-col items-center">
 		    <FormControlLabel
 			control={<Checkbox/>}
 			label='Я принимаю условия пользования'
