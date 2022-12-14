@@ -23,9 +23,15 @@ export const theme = createTheme({
 	MuiTextField: {
 	    styleOverrides: {
 		root: sx({
+		    // eslint-disable-next-line
+		    // @ts-ignore
 		    '& label': { paddingLeft: (theme) => theme.spacing(2) },
+		    // eslint-disable-next-line
+		    // @ts-ignore
 		    '& input': { paddingLeft: (theme) => theme.spacing(3.5) },
 		    '& fieldset': {
+		    // eslint-disable-next-line
+		    // @ts-ignore
 			paddingLeft: (theme) => theme.spacing(2.5),
 			borderRadius: '12px',
 		    },
@@ -36,6 +42,8 @@ export const theme = createTheme({
 	    styleOverrides: {
 		root: sx({
 		    '& fieldset': {
+		    // eslint-disable-next-line
+		    // @ts-ignore
 			paddingLeft: (theme) => theme.spacing(2.5),
 			borderRadius: '16px',
 		    },
