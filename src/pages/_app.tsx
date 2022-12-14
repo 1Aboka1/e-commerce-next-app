@@ -3,6 +3,7 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@mui/material";
 import NextNProgress from "nextjs-progressbar";
+import { ChakraProvider } from "@chakra-ui/react";
 
 import { trpc } from "../utils/trpc";
 
@@ -14,12 +15,15 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   return (
+  <ChakraProvider>
     <ThemeProvider theme={theme}>
 	<SessionProvider session={session}>
 	    <NextNProgress/>
 	    <Component {...pageProps} />
 	</SessionProvider>
     </ThemeProvider>
+
+  </ChakraProvider>
   );
 };
 
