@@ -1,4 +1,4 @@
-import {Button, Checkbox, FormControlLabel, TextField} from "@mui/material"
+import {Button, Checkbox, FormControlLabel, InputAdornment, TextField} from "@mui/material"
 import { useSession, signIn } from "next-auth/react"
 import { useRouter } from "next/router"
 import { useForm } from "react-hook-form"
@@ -9,7 +9,9 @@ import {useEffect, useState} from "react"
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons"
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Popover, PopoverTrigger, PopoverContent, PopoverBody, PopoverHeader, useDisclosure } from "@chakra-ui/react"
+import { Popover, PopoverTrigger, PopoverContent, PopoverBody, PopoverHeader, useDisclosure, PopoverArrow } from "@chakra-ui/react"
+import {ReactJSXElement} from "@emotion/react/types/jsx-namespace"
+import {VisibilityOutlined} from "@mui/icons-material"
 
 type Inputs = {
     email: string,
@@ -21,18 +23,25 @@ type Inputs = {
 }
 
 const emailRegex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "gm")
+const passwordRegex = new RegExp(/(?=^.{6,}$)(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^A-Za-z0-9]).*/)
 const validationSchema = yup.object({
-    email: yup.string().required()
+    email: yup.string().required('Укажите почту')
 	.matches(emailRegex, 'Введите почту'),
-    password: yup.string().required()
+    password: yup.string().required('Укажите пароль')
 	.min(8, 'Пароль должен быть длиной в 8-12 символов')
-	.max(20, 'Пароль должен быть длиной в 8-12 символов'),
+	.max(20, 'Пароль должен быть длиной в 8-12 символов')
+	.matches(passwordRegex, 'Пароль должен состоять из: 1 заглавной буквы, 1 цифры и 1 специального символа'),
     passwordConfirmation: yup
 	.string()
+	.required('Повторите пароль')
 	.oneOf([yup.ref('password'), null], 'Пароли не совпадают'),
-    firstName: yup.string().required(),
-    lastName: yup.string().required(),
-    checkbox: yup.boolean().required().is(true),
+    firstName: yup.string().required('Укажите имя')
+	.min(3, 'Имя должно быть длиной в 3-25 символов')
+	.max(25, 'Имя должно быть длиной в 3-25 символов'),
+    lastName: yup.string().required('Укажите фамилию')
+	.min(3, 'Фамилия должна быть длиной в 3-25 символов')
+	.max(25, 'Фамилия должна быть длиной в 3-25 символов'),
+    checkbox: yup.boolean().required().isTrue(),
 })
 
 const Registration = () => {
@@ -113,13 +122,15 @@ const EmailTab = ({ tabControl, formControl, errors, clearErrors }: any) => {
 	clearErrors()
     }, [])
 
+    const [showPassword, setShowPassword] = useState(false)
+
     return (
-	<div className="flex justify-center items-center">
-	    <div className="flex flex-col space-y-4 items-center justify-center">
+	<div className="flex justify-center items-center flex-nowrap">
+	    <div className="flex flex-col space-y-4 items-center justify-center flex-nowrap">
 		<div className="flex flex-col items-start justify-start w-full">
 	    <Button type='submit' onClick={() => tabControl('names')} variant='text' size="small" color="secondary" className="rounded-xl w-full capitalize font-semibold text-md text-neutral-600 p-2"><ArrowBackIcon/>Назад</Button> 
 		</div>
-		<div className="justify-center flex flex-col space-y-3 w-full">
+		<div className="justify-center flex flex-col items-start flex-nowrap space-y-3 lg:w-80">
 		    <TextField 
 			{...formControl('email', { required: true })} 
 			variant="outlined" 
@@ -128,25 +139,34 @@ const EmailTab = ({ tabControl, formControl, errors, clearErrors }: any) => {
 			label='Email'
 			color={errors.email && 'error'}
 		    />
+		    <FieldError error={errors.email}/>
 		    <TextField 
 			{...formControl('password', { required: true })} 
-			type='password' 
+			type={showPassword ? 'text' : 'password'}
 			variant="outlined" 
 			size='small' 
 			fullWidth 
 			label='Пароль'
 			color={errors.password && 'error'}
+			InputProps={{
+			    endAdornment: (
+				<InputAdornment position='end'>
+				    <VisibilityOutlined className='cursor-pointer' onClick={() => setShowPassword(!showPassword)}/>
+				</InputAdornment>
+			    )
+			}}
 		    />
-		    {errors.password && errors.password?.message}
+		    <FieldError className="" error={errors.password}/>
 		    <TextField 
 			{...formControl('passwordConfirmation', { required: true })} 
-			type='password' 
+			type={showPassword ? 'text' : 'password'}
 			variant="outlined" 
 			size='small' 
 			fullWidth 
 			label='Повторите пароль'
 			color={errors.passwordConfirmation && 'error'}
 		    />
+		    <FieldError error={errors.passwordConfirmation}/>
 		</div> 
 		<div className="flex flex-col items-center">
 		    <FormControlLabel
@@ -172,12 +192,12 @@ const NamesTab = ({ tabControl, formControl, formSubmitHandler, getValues, error
     }
 
     return (
-	<div className="flex flex-col space-y-4 items-center basis-4/5 justify-center">
-	    <div className="justify-center flex py-3 flex-col items-center">
+	<div className="flex flex-col space-y-4 items-center justify-center">
+		<div className="justify-center flex py-3 flex-col flex-nowrap items-center">
 		<h1 className="font-medium text-3xl">Регистрация</h1> 
 		<p className="font-medium text-sm">Введите свои данные.</p>
 	    </div>
-	    <div className="justify-center flex flex-col basis-4/5 space-y-3 w-full">
+	    <div className="justify-center flex flex-col items-start basis-4/5 space-y-3 lg:w-80">
 		<TextField 
 		    {...formControl('firstName', { required: true })} 
 		    variant="outlined" 
@@ -186,14 +206,17 @@ const NamesTab = ({ tabControl, formControl, formSubmitHandler, getValues, error
 		    label='Имя'
 		    color={errors.firstName && 'error'}
 		/>
+		<FieldError error={errors.firstName}/>
 		<TextField 
 		    {...formControl('lastName', { required: true })} 
 		    variant="outlined" 
 		    size='small' 
+		    key={errors.lastName}
 		    fullWidth 
 		    label='Фамилия'
 		    color={errors.lastName && 'error'}
 		/>
+		<FieldError error={errors.lastName}/>
 	    </div>
 	    <Button 
 		onClick={() => { switchToNextTab(); formSubmitHandler; }}
@@ -211,14 +234,27 @@ const NamesTab = ({ tabControl, formControl, formSubmitHandler, getValues, error
     )
 }
 
-const ValidationPopover = ({ message }: {message: string}) => {
-    return (
-	<Popover>
-	    <PopoverTrigger>
-			
-	    </PopoverTrigger>
-	</Popover>
-    )
+const FieldError = ({ error }: any) => {
+    if(error) {
+	return (
+	    <AnimatePresence
+		mode='wait'
+	    >
+		<motion.div 
+		    className="text-red-600 text-sm"
+		    key={error?.message}
+		    initial={{ y: 10, opacity: 0 }}
+		    animate={{ y: 0, opacity: 1 }}
+		    exit={{ y: -10, opacity: 0 }}
+		    transition={{ duration: 0.3 }}
+		>
+		    {error?.message}
+		</motion.div>
+	    </AnimatePresence>
+	)
+    } else {
+	return null
+    }
 }
 
 export default Registration

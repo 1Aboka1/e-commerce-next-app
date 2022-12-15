@@ -1,4 +1,4 @@
-import { createTheme, experimental_sx as sx } from "@mui/material/styles"
+import { createTheme } from "@mui/material/styles"
 
 export const theme = createTheme({
     palette: {
@@ -15,17 +15,17 @@ export const theme = createTheme({
     components: {
 	MuiContainer: {
 	    styleOverrides: {
-		root: {
+		root: ({ theme }) => theme.unstable_sx({
 		    border: "1px solid black",
 		    width: 80,
 		    height: 80,
 		    borderRadius: 20,
-		}
+		})
 	    }
 	},
 	MuiTextField: {
 	    styleOverrides: {
-		root: sx({
+		root: ({ theme }) => theme.unstable_sx({
 		    // eslint-disable-next-line
 		    // @ts-ignore
 		    '& label': { paddingLeft: (theme) => theme.spacing(2) },
@@ -43,14 +43,14 @@ export const theme = createTheme({
 	},
 	MuiButton: {
 	    styleOverrides: {
-		root: sx({
+		root: ({ theme }) => theme.unstable_sx({
 		    '& fieldset': {
 		    // eslint-disable-next-line
 		    // @ts-ignore
 			paddingLeft: (theme) => theme.spacing(2.5),
 			borderRadius: '16px',
 		    },
-		})
+		}),
 	    }
 	}
     },
