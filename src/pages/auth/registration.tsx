@@ -2,15 +2,14 @@ import {Button, Checkbox, FormControlLabel, InputAdornment, TextField} from "@mu
 import { useSession, signIn } from "next-auth/react"
 import { useRouter } from "next/router"
 import { useForm } from "react-hook-form"
-import { AnimatePresence, motion, useAnimationControls } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { FcGoogle } from 'react-icons/fc'
 import Link from "next/link"
 import {useEffect, useState} from "react"
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons"
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Popover, PopoverTrigger, PopoverContent, PopoverBody, PopoverHeader, useDisclosure, PopoverArrow } from "@chakra-ui/react"
-import {ReactJSXElement} from "@emotion/react/types/jsx-namespace"
+import { useDisclosure } from "@chakra-ui/react"
 import {VisibilityOutlined} from "@mui/icons-material"
 
 type Inputs = {
@@ -117,6 +116,58 @@ const Registration = () => {
     )
 }
 
+const NamesTab = ({ tabControl, formControl, formSubmitHandler, getValues, errors, clearErrors }: any) => {
+    const switchToNextTab = () => {
+	if(getValues('firstName').length === 0 || getValues('lastName').length === 0 ) {
+	    clearErrors()
+	    return
+	}
+	tabControl('email')
+    }
+
+    return (
+	<div className="flex flex-col space-y-4 items-center justify-center">
+		<div className="justify-center flex py-3 flex-col flex-nowrap items-center">
+		<h1 className="font-medium text-3xl">Регистрация</h1> 
+		<p className="font-medium text-sm">Введите свои данные.</p>
+	    </div>
+	    <div className="justify-center flex flex-col items-start basis-4/5 space-y-3 lg:w-80">
+		<TextField 
+		    {...formControl('firstName', { required: true })} 
+		    variant="outlined" 
+		    size='small' 
+		    fullWidth 
+		    label='Имя'
+		    color={errors.firstName && 'error'}
+		/>
+		<FieldError error={errors.firstName}/>
+		<TextField 
+		    {...formControl('lastName', { required: true })} 
+		    variant="outlined" 
+		    size='small' 
+		    key={errors.lastName}
+		    fullWidth 
+		    label='Фамилия'
+		    color={errors.lastName && 'error'}
+		/>
+		<FieldError error={errors.lastName}/>
+	    </div>
+	    <Button 
+		onClick={() => { switchToNextTab(); formSubmitHandler; }}
+		variant='contained' 
+		size="small" 
+		color="secondary" 
+		className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-400 p-2 w-full"
+		type='submit'
+	    >
+		Продолжить<ArrowForwardIcon/>
+	    </Button> 
+	    <p className="text-sm text-neutral-500 cursor-pointer">Уже есть аккаунт?</p>
+	    <FcGoogle onClick={() => signIn('google')} size={40} className='cursor-pointer'/>
+	</div>	
+    )
+}
+
 const EmailTab = ({ tabControl, formControl, errors, clearErrors }: any) => {
     useEffect(() => {
 	clearErrors()
@@ -178,58 +229,6 @@ const EmailTab = ({ tabControl, formControl, errors, clearErrors }: any) => {
 		</div>
 		<Button type='submit' variant='contained' size="small" color="secondary" className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-400 p-2 w-full">Зарегистрироваться</Button>
 	    </div>	
-	</div>	
-    )
-}
-
-const NamesTab = ({ tabControl, formControl, formSubmitHandler, getValues, errors, clearErrors }: any) => {
-    const switchToNextTab = () => {
-	if(getValues('firstName').length === 0 || getValues('lastName').length === 0 ) {
-	    clearErrors()
-	    return
-	}
-	tabControl('email')
-    }
-
-    return (
-	<div className="flex flex-col space-y-4 items-center justify-center">
-		<div className="justify-center flex py-3 flex-col flex-nowrap items-center">
-		<h1 className="font-medium text-3xl">Регистрация</h1> 
-		<p className="font-medium text-sm">Введите свои данные.</p>
-	    </div>
-	    <div className="justify-center flex flex-col items-start basis-4/5 space-y-3 lg:w-80">
-		<TextField 
-		    {...formControl('firstName', { required: true })} 
-		    variant="outlined" 
-		    size='small' 
-		    fullWidth 
-		    label='Имя'
-		    color={errors.firstName && 'error'}
-		/>
-		<FieldError error={errors.firstName}/>
-		<TextField 
-		    {...formControl('lastName', { required: true })} 
-		    variant="outlined" 
-		    size='small' 
-		    key={errors.lastName}
-		    fullWidth 
-		    label='Фамилия'
-		    color={errors.lastName && 'error'}
-		/>
-		<FieldError error={errors.lastName}/>
-	    </div>
-	    <Button 
-		onClick={() => { switchToNextTab(); formSubmitHandler; }}
-		variant='contained' 
-		size="small" 
-		color="secondary" 
-		className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-400 p-2 w-full"
-		type='submit'
-	    >
-		Продолжить<ArrowForwardIcon/>
-	    </Button> 
-	    <p className="text-sm text-neutral-500 cursor-pointer">Уже есть аккаунт?</p>
-	    <FcGoogle onClick={() => signIn('google')} size={40} className='cursor-pointer'/>
 	</div>	
     )
 }
