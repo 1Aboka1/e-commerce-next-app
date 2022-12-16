@@ -11,6 +11,8 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDisclosure } from "@chakra-ui/react"
 import {VisibilityOutlined} from "@mui/icons-material"
+import bcrypt from 'bcrypt'
+import { prisma } from "../../server/db/client"
 
 type Inputs = {
     email: string,
@@ -63,6 +65,23 @@ const Registration = () => {
     const { isOpen, onToggle, onClose } = useDisclosure()
     const onFormSubmit = handleSubmit((data) => {
 	console.log(data)
+	// bcrypt.hash(data.password, 10, function(err, hash) {
+	//     prisma.user.create({
+	// 	data: {
+	// 	    email: data.email,
+	// 	    name: data.firstName + data.lastName,
+	// 	    password: hash,
+	// 	}
+	//     })    
+	//     signIn('credentials', { email: data.email, password: data.password, callbackUrl: `${window.location.origin}/dashboard`, redirect: false })
+	//     .then((result) => {
+	// 	if(result?.error) {
+	// 	    console.log(result?.status)
+	// 	} else {
+	// 	    console.log(result?.url)
+	// 	}
+	//     })
+	// })
     })
     
     const [tab, setTab] = useState<'names' | 'email'>('names')
@@ -207,7 +226,7 @@ const EmailTab = ({ tabControl, formControl, errors, clearErrors }: any) => {
 			    )
 			}}
 		    />
-		    <FieldError className="" error={errors.password}/>
+		    <FieldError error={errors.password}/>
 		    <TextField 
 			{...formControl('passwordConfirmation', { required: true })} 
 			type={showPassword ? 'text' : 'password'}
