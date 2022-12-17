@@ -2,7 +2,7 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import { EmailProvider } from "next-auth/providers/email.js";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -62,28 +62,27 @@ export const authOptions: NextAuthOptions = {
 	    name: 'Credentials',
 	    credentials: {},
 	    async authorize(credentials, req) {
-		try {
-		    const user = await prisma.user.findFirst({
-			where: {
-			    email: credentials?.email,
-			}
-		    })
-		    if(user) {
-			const res = await confirmPasswordHash(credentials?.password, user.password!)
-			if(res === true) {
-			    userAccount = {
-				userId: user.id,
-			    }
-			    return userAccount
-			} else {
-			    console.log("password incorrect")
-			    return null
-			}
-		    } else {
-			return null
+		const user = await prisma.user.findFirst({
+		    where: {
+			email: credentials?.email,
 		    }
-		} catch(error) {
-		    console.log("Authorize error", error)
+		})
+		if(!user) {
+		    throw new Error("No user was found")
+		}
+		const passwordCheck = bcrypt.compare(credentials?.password, user.password)
+		if(!passwordCheck) {
+		    throw new Error('Email or password doesn\'t match')
+		}
+
+		if(res) {
+		    userAccount = {
+			userId: user.id,
+		    }
+		    return userAccount
+		} else {
+		    console.log("password incorrect")
+		    return null
 		}
 	    }
 	})

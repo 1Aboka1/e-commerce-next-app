@@ -24,29 +24,12 @@ type Inputs = {
     checkbox: boolean,
 }
 
-const emailRegex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "gm")
-const passwordRegex = new RegExp(/(?=^.{6,}$)(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[^A-Za-z0-9]).*/)
 const validationSchema = yup.object({
-    email: yup.string().required('Укажите почту')
-	.matches(emailRegex, 'Введите почту'),
-    password: yup.string().required('Укажите пароль')
-	.min(8, 'Пароль должен быть длиной в 8-12 символов')
-	.max(20, 'Пароль должен быть длиной в 8-12 символов')
-	.matches(passwordRegex, 'Пароль должен состоять из: 1 заглавной буквы, 1 цифры и 1 специального символа'),
-    passwordConfirmation: yup
-	.string()
-	.required('Повторите пароль')
-	.oneOf([yup.ref('password'), null], 'Пароли не совпадают'),
-    firstName: yup.string().required('Укажите имя')
-	.min(3, 'Имя должно быть длиной в 3-25 символов')
-	.max(25, 'Имя должно быть длиной в 3-25 символов'),
-    lastName: yup.string().required('Укажите фамилию')
-	.min(3, 'Фамилия должна быть длиной в 3-25 символов')
-	.max(25, 'Фамилия должна быть длиной в 3-25 символов'),
-    checkbox: yup.boolean().required().isTrue(),
+    email: yup.string().required('Укажите почту'),
+    password: yup.string().required('Укажите пароль'),
 })
 
-const Registration = () => {
+const Login = () => {
     const router = useRouter()
     const { data: session, status } = useSession()
     if(status === 'authenticated') {
@@ -63,33 +46,10 @@ const Registration = () => {
     } = useForm<Inputs>({
 	resolver: yupResolver(validationSchema)
     })
-    const createUser = trpc.auth.createUser.useMutation()	
     const onFormSubmit = handleSubmit((data) => {
-	bcrypt.genSalt(10, (err, salt) => {
-	    bcrypt.hash(data.password, salt, async (err, hash) => {
-		createUser
-		    .mutateAsync({
-			name: data.firstName + ' ' + data.lastName,
-			email: data.email,
-			password: hash,
-		    })
-		    .then((response) => {
-			signIn('credentials', { email: data.email, password: hash, callbackUrl: `${window.location.origin}/dashboard`, redirect: false })
-			.then((result) => {
-			    if(result?.error) {
-				console.log(result?.status)
-			    } else {
-				console.log(result?.url)
-			    }
-			})
-		    })
-		    
-	    })
-	})	
+	console.log(data)
     })
     
-    const [tab, setTab] = useState<'names' | 'email'>('names')
-
     return (
 	<div className="bg-tropical-blue-400 h-screen w-screen flex flex-col justify-center">
 	    <motion.div 
@@ -107,88 +67,21 @@ const Registration = () => {
 		    >
 			<motion.div 
 			    className="flex h-full justify-center items-center"
-			    key={tab}
 			    initial={{ x: 10, opacity: 0 }}
 			    animate={{ x: 0, opacity: 1 }}
 			    exit={{ x: -10, opacity: 0 }}
 			    transition={{ duration: 0.2 }}
 			>
-			    {
-				tab === 'names' ?
-				<NamesTab 
-				    tabControl={setTab} 
-				    formControl={register}
-				    errors={errors}
-				    formSubmitHandler={onFormSubmit}
-				    getValues={getValues}
-				    clearErrors={clearErrors}
-				/>
-				:
-				<EmailTab 
-				    tabControl={setTab} 
-				    formControl={register}
-				    errors={errors}
-				    clearErrors={clearErrors}
-				    createUser={createUser}
-				/>
-			    }
+			    <EmailTab 
+				formControl={register}
+				errors={errors}
+				clearErrors={clearErrors}
+			    />
 			</motion.div>	
 		    </AnimatePresence>
 		</form>
 	    </motion.div> 
 	</div>
-    )
-}
-
-const NamesTab = ({ tabControl, formControl, formSubmitHandler, getValues, errors, clearErrors }: any) => {
-    const switchToNextTab = () => {
-	if(getValues('firstName').length === 0 || getValues('lastName').length === 0 ) {
-	    clearErrors()
-	    return
-	}
-	tabControl('email')
-    }
-
-    return (
-	<div className="flex flex-col space-y-4 items-center justify-center">
-		<div className="justify-center flex py-3 flex-col flex-nowrap items-center">
-		<h1 className="font-medium text-3xl">Регистрация</h1> 
-		<p className="font-medium text-sm">Введите свои данные.</p>
-	    </div>
-	    <div className="justify-center flex flex-col items-start basis-4/5 space-y-3 lg:w-80">
-		<TextField 
-		    {...formControl('firstName', { required: true })} 
-		    variant="outlined" 
-		    size='small' 
-		    fullWidth 
-		    label='Имя'
-		    color={errors.firstName && 'error'}
-		/>
-		<FieldError error={errors.firstName}/>
-		<TextField 
-		    {...formControl('lastName', { required: true })} 
-		    variant="outlined" 
-		    size='small' 
-		    key={errors.lastName}
-		    fullWidth 
-		    label='Фамилия'
-		    color={errors.lastName && 'error'}
-		/>
-		<FieldError error={errors.lastName}/>
-	    </div>
-	    <Button 
-		onClick={() => { switchToNextTab(); formSubmitHandler; }}
-		variant='contained' 
-		size="small" 
-		color="secondary" 
-		className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-400 p-2 w-full"
-		type='submit'
-	    >
-		Продолжить<ArrowForwardIcon/>
-	    </Button> 
-	    <p className="text-sm text-neutral-500 cursor-pointer">Уже есть аккаунт?</p>
-	    <FcGoogle onClick={() => signIn('google')} size={40} className='cursor-pointer'/>
-	</div>	
     )
 }
 
