@@ -4,7 +4,6 @@ import {useRouter} from "next/router"
 const Home = () => {
     const { data: session, status } = useSession()
     const router = useRouter()
-    console.log(status)
 
     return (
 	<div>

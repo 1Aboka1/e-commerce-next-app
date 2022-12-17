@@ -10,42 +10,31 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
 
-let userAccount = null
-
-const confirmPasswordHash = (plainPassword: string, hashedPassword: string) => {
-    return new Promise(resolve => {
-	bcrypt.compare(plainPassword, hashedPassword, function(err, res) {
-	    resolve(res)
-	})
-    })
-}
-
 export const authOptions: NextAuthOptions = {
-    session: {
-	maxAge: 30 * 24 * 60 * 60,
-    },
-    jwt: {
-	maxAge: 30 * 24 * 60 * 60,
-    },
     // Include user.id on session
     callbacks: {
-	session({ session, user }) {
+	async jwt({ token, user, account, profile, isNewUser }) {
+	    console.log('HERE SHOULD HAVE BEEN JWT')
+	    if(user) {
+		token.email = user?.email
+		token.name = user?.name
+	    }
+	    return token
+	},
+	async session({ session, user }) {
+	    console.log('SOMETHING IS FUCKING WRONG')
 	    if (session.user) {
 		session.user.id = user.id;
 	    }
 	    return session;
 	},
-	async signIn({ user, account, profile, email, credentials }) {
-	    try {
-		if(user.id) {
-		    return true
-		} else {
-		    return false
-		}
-	    } catch(error) {
-		console.log('Sign in callback error', error)
-	    }
-	}
+    },
+    session: {
+	strategy: 'jwt',
+	maxAge: 30 * 24 * 60 * 60,
+    },
+    jwt: {
+	maxAge: 60 * 60 * 24 * 30,
     },
     // Configure one or more authentication providers
     adapter: PrismaAdapter(prisma),
@@ -74,16 +63,7 @@ export const authOptions: NextAuthOptions = {
 		if(!passwordCheck) {
 		    throw new Error('Email or password doesn\'t match')
 		}
-
-		if(res) {
-		    userAccount = {
-			userId: user.id,
-		    }
-		    return userAccount
-		} else {
-		    console.log("password incorrect")
-		    return null
-		}
+		return user
 	    }
 	})
     ],

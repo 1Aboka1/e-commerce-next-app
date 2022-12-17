@@ -73,14 +73,14 @@ const Registration = () => {
 			email: data.email,
 			password: hash,
 		    })
-		    .then((response) => {
-			signIn('credentials', { email: data.email, password: hash, callbackUrl: `${window.location.origin}/dashboard`, redirect: false })
+		    .then(async (response) => {
+			await signIn('credentials', { email: data.email, password: data.password, callbackUrl: `/`, redirect: false })
 			.then((result) => {
 			    if(result?.error) {
 				console.log(result?.status)
-			    } else {
-				console.log(result?.url)
-			    }
+				return
+			    } 
+			    router.push('/')	
 			})
 		    })
 		    
@@ -148,10 +148,11 @@ const NamesTab = ({ tabControl, formControl, formSubmitHandler, getValues, error
 	}
 	tabControl('email')
     }
+    const router = useRouter()
 
     return (
 	<div className="flex flex-col space-y-4 items-center justify-center">
-		<div className="justify-center flex py-3 flex-col flex-nowrap items-center">
+	    <div className="justify-center flex py-3 flex-col flex-nowrap items-center">
 		<h1 className="font-medium text-3xl">Регистрация</h1> 
 		<p className="font-medium text-sm">Введите свои данные.</p>
 	    </div>
@@ -186,7 +187,7 @@ const NamesTab = ({ tabControl, formControl, formSubmitHandler, getValues, error
 	    >
 		Продолжить<ArrowForwardIcon/>
 	    </Button> 
-	    <p className="text-sm text-neutral-500 cursor-pointer">Уже есть аккаунт?</p>
+	    <p className="text-sm text-neutral-500 cursor-pointer" onClick={() => router.push('/auth/login')}>Уже есть аккаунт?</p>
 	    <FcGoogle onClick={() => signIn('google')} size={40} className='cursor-pointer'/>
 	</div>	
     )

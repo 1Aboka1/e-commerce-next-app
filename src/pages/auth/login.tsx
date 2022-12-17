@@ -3,17 +3,12 @@ import { useSession, signIn } from "next-auth/react"
 import { useRouter } from "next/router"
 import { useForm } from "react-hook-form"
 import { AnimatePresence, motion } from "framer-motion"
-import bcrypt from "bcryptjs"
 import { FcGoogle } from 'react-icons/fc'
 import Link from "next/link"
 import {useEffect, useState} from "react"
-import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons"
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useDisclosure } from "@chakra-ui/react"
 import {VisibilityOutlined} from "@mui/icons-material"
-import { trpc } from "../../utils/trpc"
-import {create} from "yup/lib/Reference"
 
 type Inputs = {
     email: string,
@@ -24,8 +19,10 @@ type Inputs = {
     checkbox: boolean,
 }
 
+const emailRegex = new RegExp(/^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/, "gm")
 const validationSchema = yup.object({
-    email: yup.string().required('Укажите почту'),
+    email: yup.string().required('Укажите почту')
+	.matches(emailRegex, 'Укажите правильную почту'),
     password: yup.string().required('Укажите пароль'),
 })
 
@@ -46,8 +43,15 @@ const Login = () => {
     } = useForm<Inputs>({
 	resolver: yupResolver(validationSchema)
     })
-    const onFormSubmit = handleSubmit((data) => {
-	console.log(data)
+    const onFormSubmit = handleSubmit(async (data) => {
+	const result = await signIn('credentials', {
+	    redirect: false,
+	    email: data.email,
+	    password: data.password,
+	    callbackUrl: '/',
+	})
+
+	router.push('/')
     })
     
     return (
@@ -85,18 +89,20 @@ const Login = () => {
     )
 }
 
-const EmailTab = ({ tabControl, formControl, errors, clearErrors, createUser }: any) => {
+const EmailTab = ({ formControl, errors, clearErrors }: any) => {
     useEffect(() => {
 	clearErrors()
     }, [])
 
     const [showPassword, setShowPassword] = useState(false)
+    const router = useRouter()
 
     return (
 	<div className="flex justify-center items-center flex-nowrap">
 	    <div className="flex flex-col space-y-4 items-center justify-center flex-nowrap">
-		<div className="flex flex-col items-start justify-start w-full">
-	    <Button type='submit' onClick={() => tabControl('names')} variant='text' size="small" disabled={createUser.isLoading} color="secondary" className="rounded-xl w-full capitalize font-semibold text-md text-neutral-600 p-2"><ArrowBackIcon/>Назад</Button> 
+		<div className="justify-center flex py-3 flex-col flex-nowrap items-center">
+		    <h1 className="font-medium text-3xl">Вход</h1> 
+		    <p className="font-medium text-sm">Введите свои данные.</p>
 		</div>
 		<div className="justify-center flex flex-col items-start flex-nowrap space-y-3 lg:w-80">
 		    <TextField 
@@ -125,26 +131,10 @@ const EmailTab = ({ tabControl, formControl, errors, clearErrors, createUser }: 
 			}}
 		    />
 		    <FieldError error={errors.password}/>
-		    <TextField 
-			{...formControl('passwordConfirmation', { required: true })} 
-			type={showPassword ? 'text' : 'password'}
-			variant="outlined" 
-			size='small' 
-			fullWidth 
-			label='Повторите пароль'
-			color={errors.passwordConfirmation && 'error'}
-		    />
-		    <FieldError error={errors.passwordConfirmation}/>
 		</div> 
-		<div className="flex flex-col items-center">
-		    <FormControlLabel
-			control={<Checkbox color={errors.checkbox && 'error'}/>}
-			label='Я принимаю условия пользования'
-			{...formControl('checkbox', { required: true })}
-			className={errors.checkbox && 'text-red-600'}
-		    />
-		</div>
-		<Button type='submit' variant='contained' size="small" disabled={createUser.isLoading} color="secondary" className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-400 p-2 w-full">Зарегистрироваться</Button>
+		<Button type='submit' variant='contained' size="small" color="secondary" className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-400 p-2 w-full">Войти</Button>
+		<p className="text-sm text-neutral-500 cursor-pointer" onClick={() => router.push('/auth/registration')}>Нету аккаунта?</p>
+		<FcGoogle onClick={() => signIn('google')} size={40} className='cursor-pointer'/>
 	    </div>	
 	</div>	
     )
@@ -173,4 +163,4 @@ const FieldError = ({ error }: any) => {
     }
 }
 
-export default Registration
+export default Login 
