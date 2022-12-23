@@ -1,6 +1,6 @@
 import {InputAdornment, TextField} from "@mui/material"
 import Image from "next/image"
-import Logo from '../../public/favicon.png'
+import Logo from '../../../../public/favicon.png'
 import {type ReactNode} from "react"
 import { AiOutlineUser } from 'react-icons/ai'
 import { BsSearch } from 'react-icons/bs'
@@ -60,6 +60,7 @@ const Navbar = () => {
 				    <ButtonWithIconOnBottom
 					text={firstName}
 					icon={<AiOutlineUser size={25}/>}
+					bold
 				    />
 				</div>
 			    ) :
@@ -96,14 +97,14 @@ export const TopBar = () => {
     )
 }
 
-const ButtonWithIconOnBottom = ({ text, icon }: { text?: string, icon: ReactNode }) => {
+const ButtonWithIconOnBottom = ({ text, icon, bold }: { text?: string, icon: ReactNode, bold?: boolean }) => {
     return (
 	<IconContext.Provider value={{ color: '#89b4ff', className: "" }}>
 	    <div className="flex flex-col items-center cursor-pointer">
 		<div className="">
 		    {icon}
 		</div>
-		<span className="group-hover:text-[#89b4ff] transition duration-150 ease-in-out">
+		<span className={"group-hover:text-[#89b4ff] transition duration-150 ease-in-out " + (bold ? "font-semibold" : '')}>
 		    {text}
 		</span>
 	    </div>

@@ -1,16 +1,20 @@
 import { signIn, signOut, useSession } from "next-auth/react"
 import {useRouter} from "next/router"
 import {ReactElement} from "react"
-import Footer from "../components/Footer"
-import Navbar, {TopBar} from "../components/Navbar"
+import CarouselAndFeatured from "../components/homePageComponents/CarouselAndFeatured"
+import Footer from "../components/layouts/layoutComponents/Footer"
+import Navbar, {TopBar} from "../components/layouts/layoutComponents/Navbar"
+import MainLayout from "../components/layouts/MainLayout"
 
 const Home = () => { 
     const { data: session, status } = useSession()
     const router = useRouter()
 
     return (
-	<div className="">
-	</div>
+	<div>
+	    <button onClick={() => signOut()}>out</button>
+	    <CarouselAndFeatured/>
+	</div>	
     )
 }
 
@@ -19,7 +23,9 @@ Home.getLayout = function getLayout(page: ReactElement) {
 	<>
 	    <TopBar/>
 	    <Navbar/>
-	    {page}
+	    <MainLayout>
+		{page}
+	    </MainLayout>
 	    <Footer/>
 	</>
     )

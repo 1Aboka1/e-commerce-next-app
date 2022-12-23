@@ -38,6 +38,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.40.0",
     "react-icons": "^4.7.1",
+    "react-responsive-carousel": "^3.2.23",
     "react-social-icons": "^5.15.0",
     "superjson": "1.9.1",
     "yup": "^0.32.11",

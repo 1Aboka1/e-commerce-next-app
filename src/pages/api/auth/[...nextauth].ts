@@ -2,6 +2,7 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials";
+import MailRuProvider from 'next-auth/providers/mailru'
 import bcrypt from 'bcryptjs'
 import { EmailProvider } from "next-auth/providers/email.js";
 // Prisma adapter for NextAuth, optional and can be removed
@@ -30,6 +31,10 @@ export const authOptions: NextAuthOptions = {
 	GoogleProvider({
 	    clientId: env.GOOGLE_CLIENT_ID,
 	    clientSecret: env.GOOGLE_CLIENT_SECRET,
+	}),
+	MailRuProvider({
+	    clientId: env.MAILRU_CLIENT_ID,
+	    clientSecret: env.MAILRU_CLIENT_SECRET,
 	}),
 	CredentialsProvider({
 	    name: 'Credentials',
