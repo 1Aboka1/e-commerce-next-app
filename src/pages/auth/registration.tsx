@@ -6,14 +6,13 @@ import { AnimatePresence, motion } from "framer-motion"
 import bcrypt from "bcryptjs"
 import { FcGoogle } from 'react-icons/fc'
 import Link from "next/link"
-import {useEffect, useState} from "react"
+import {ReactElement, useEffect, useState} from "react"
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons"
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useDisclosure } from "@chakra-ui/react"
 import {VisibilityOutlined} from "@mui/icons-material"
 import { trpc } from "../../utils/trpc"
-import {create} from "yup/lib/Reference"
+import {NextPageWithLayout} from "../_app"
 
 type Inputs = {
     email: string,
@@ -46,7 +45,7 @@ const validationSchema = yup.object({
     checkbox: yup.boolean().required().isTrue(),
 })
 
-const Registration = () => {
+const Registration: NextPageWithLayout = () => {
     const router = useRouter()
     const { data: session, status } = useSession()
     if(status === 'authenticated') {
@@ -77,7 +76,6 @@ const Registration = () => {
 			await signIn('credentials', { email: data.email, password: data.password, callbackUrl: `/`, redirect: false })
 			.then((result) => {
 			    if(result?.error) {
-				console.log(result?.status)
 				return
 			    } 
 			    router.push('/')	
@@ -279,6 +277,14 @@ const FieldError = ({ error }: any) => {
     } else {
 	return null
     }
+}
+
+Registration.getLayout = function getLayout(page: ReactElement) {
+    return (
+	<>
+	    {page}
+	</>
+    )
 }
 
 export default Registration

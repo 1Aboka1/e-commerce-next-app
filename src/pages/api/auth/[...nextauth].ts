@@ -13,28 +13,12 @@ import { prisma } from "../../../server/db/client";
 export const authOptions: NextAuthOptions = {
     // Include user.id on session
     callbacks: {
-	async jwt({ token, user, account, profile, isNewUser }) {
-	    console.log('HERE SHOULD HAVE BEEN JWT')
-	    if(user) {
-		token.email = user?.email
-		token.name = user?.name
-	    }
-	    return token
-	},
 	async session({ session, user }) {
-	    console.log('SOMETHING IS FUCKING WRONG')
 	    if (session.user) {
 		session.user.id = user.id;
 	    }
 	    return session;
 	},
-    },
-    session: {
-	strategy: 'jwt',
-	maxAge: 30 * 24 * 60 * 60,
-    },
-    jwt: {
-	maxAge: 60 * 60 * 24 * 30,
     },
     // Configure one or more authentication providers
     adapter: PrismaAdapter(prisma),

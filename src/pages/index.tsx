@@ -1,20 +1,28 @@
 import { signIn, signOut, useSession } from "next-auth/react"
 import {useRouter} from "next/router"
+import {ReactElement} from "react"
+import Footer from "../components/Footer"
+import Navbar, {TopBar} from "../components/Navbar"
 
-const Home = () => {
+const Home = () => { 
     const { data: session, status } = useSession()
     const router = useRouter()
 
     return (
-	<div>
-	    {
-		status === 'unauthenticated' ?
-		<button onClick={() => router.push('/auth/registration')}>Sign in/up</button>
-		:
-		<button onClick={() => signOut()}>Sign out</button> 
-	    }
+	<div className="">
 	</div>
     )
 }
 
+Home.getLayout = function getLayout(page: ReactElement) {
+    return (
+	<>
+	    <TopBar/>
+	    <Navbar/>
+	    {page}
+	    <Footer/>
+	</>
+    )
+}
+ 
 export default Home
