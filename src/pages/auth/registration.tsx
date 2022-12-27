@@ -89,7 +89,7 @@ const Registration: NextPageWithLayout = () => {
     const [tab, setTab] = useState<'names' | 'email'>('names')
 
     return (
-	<div className="bg-tropical-blue-400 h-screen w-screen flex flex-col justify-center">
+	<div className="bg-tropical-blue-200 h-screen w-screen flex flex-col justify-center">
 	    <motion.div 
 		className="flex flex-row mx-auto basis-3/5 lg:basis-4/5 rounded-3xl bg-gray-500"
 		initial={{ opacity: 0, scale: 0.5 }}
@@ -180,7 +180,7 @@ const NamesTab = ({ tabControl, formControl, formSubmitHandler, getValues, error
 		variant='contained' 
 		size="small" 
 		color="secondary" 
-		className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-400 p-2 w-full"
+		className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-600 p-2 w-full"
 		type='submit'
 	    >
 		Продолжить<ArrowForwardIcon/>
@@ -250,7 +250,7 @@ const EmailTab = ({ tabControl, formControl, errors, clearErrors, createUser }: 
 			className={errors.checkbox && 'text-red-600'}
 		    />
 		</div>
-		<Button type='submit' variant='contained' size="small" disabled={createUser.isLoading} color="secondary" className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-400 p-2 w-full">Зарегистрироваться</Button>
+		<Button type='submit' variant='contained' size="small" disabled={createUser.isLoading} color="secondary" className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-600 p-2 w-full">Зарегистрироваться</Button>
 	    </div>	
 	</div>	
     )

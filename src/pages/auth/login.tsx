@@ -55,7 +55,7 @@ const Login = () => {
     })
     
     return (
-	<div className="bg-tropical-blue-400 h-screen w-screen flex flex-col justify-center">
+	<div className="bg-tropical-blue-200 h-screen w-screen flex flex-col justify-center">
 	    <motion.div 
 		className="flex flex-row mx-auto basis-3/5 lg:basis-4/5 rounded-3xl bg-gray-500"
 		initial={{ opacity: 0, scale: 0.5 }}
@@ -132,7 +132,7 @@ const EmailTab = ({ formControl, errors, clearErrors }: any) => {
 		    />
 		    <FieldError error={errors.password}/>
 		</div> 
-		<Button type='submit' variant='contained' size="small" color="secondary" className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-400 p-2 w-full">Войти</Button>
+		<Button type='submit' variant='contained' size="small" color="secondary" className="rounded-xl capitalize font-semibold text-md bg-tropical-blue-600 text-white p-2 w-full">Войти</Button>
 		<p className="text-sm text-neutral-500 cursor-pointer" onClick={() => router.push('/auth/registration')}>Нету аккаунта?</p>
 		<FcGoogle onClick={() => signIn('google')} size={40} className='cursor-pointer'/>
 	    </div>	

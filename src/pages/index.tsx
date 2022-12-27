@@ -1,10 +1,12 @@
 import { signIn, signOut, useSession } from "next-auth/react"
+import Head from "next/head"
 import {useRouter} from "next/router"
 import {ReactElement} from "react"
-import CarouselAndFeatured from "../components/homePageComponents/CarouselAndFeatured"
-import Footer from "../components/layouts/layoutComponents/Footer"
-import Navbar, {TopBar} from "../components/layouts/layoutComponents/Navbar"
-import MainLayout from "../components/layouts/MainLayout"
+import CarouselAndFeatured from "../components/home/CarouselAndFeatured"
+import Footer from "../components/layouts/home/layoutComponents/Footer"
+import Navbar, {TopBar} from "../components/layouts/home/layoutComponents/Navbar"
+import MainLayout from "../components/layouts/home/MainLayout"
+import { CldImage, CldUploadWidget } from 'next-cloudinary'
 
 const Home = () => { 
     const { data: session, status } = useSession()
@@ -12,8 +14,18 @@ const Home = () => {
 
     return (
 	<div>
-	    <button onClick={() => signOut()}>out</button>
+	    <Head>
+		<title>Fastbuy - магазин запчастей</title>
+		<meta name="viewport" content="initial-scale=1.0, width=device-width"/>
+	    </Head>
 	    <CarouselAndFeatured/>
+	    <button onClick={() => signOut()}>out</button>
+	    <CldImage
+	      width="960"
+	      height="600"
+	      src="samples/animals/kitten-playing.gif"
+	      sizes="100vw"
+	    />
 	</div>	
     )
 }
