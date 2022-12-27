@@ -39,11 +39,11 @@ const Tabs = [
 
 const Tab = ({name, icon}: {name: string, icon: ReactNode}) => {
     return (
-	<motion.div className="flex flex-row space-x-3 items-center cursor-pointer">
+	<motion.div className="flex flex-row space-x-3 items-center cursor-pointer group">
 	    <div className="rounded-full bg-special-slate-icon w-8 h-8 items-center justify-center flex">
 		{icon}
 	    </div>
-	    <h1 className="text-special-slate-text">{name}</h1>
+	    <h1 className="text-special-slate-text group-hover:text-gray-100 transition duration-300 ease-in-out">{name}</h1>
 	    <motion.div 
 		className="absolute bg-white -left-1"
 		animate={{
