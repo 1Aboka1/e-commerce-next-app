@@ -35,7 +35,7 @@ const EditProduct = () => {
 		<div className="space-y-5">
 		    {Fields.map((field) => <FormFields key={field.name} name={field.name} placeholder={field.placeholder} textFieldReplacer={field.textFieldReplacer}/>)}
 		</div>
-		<CldUploadWidget uploadPreset="next-cloudinary-unsigned">
+		<CldUploadWidget uploadPreset='rvp1ymu8' onUpload={() => console.log('uploaded')}>
 		  {({ open }: any) => {
 		    function handleOnClick(e: any) {
 		      e.preventDefault()
