@@ -1,15 +1,15 @@
 import type {ReactElement} from "react"
 import MainLayout from "../../components/layouts/admin/MainLayout"
 
-const Admin = () => {
+const Products = () => {
     return(
 	<div className="flex flex-row">
-	    Admin page
+	    Products page
 	</div>
     )
 }
 
-Admin.getLayout = function getLayout(page: ReactElement) {
+Products.getLayout = function getLayout(page: ReactElement) {
     return (
 	<>
 	    <MainLayout>
@@ -19,4 +19,4 @@ Admin.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default Admin
+export default Products

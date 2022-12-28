@@ -6,13 +6,13 @@ import { AnimatePresence, motion } from "framer-motion"
 import bcrypt from "bcryptjs"
 import { FcGoogle } from 'react-icons/fc'
 import Link from "next/link"
-import {ReactElement, useEffect, useState} from "react"
+import {type ReactElement, useEffect, useState} from "react"
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons"
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import {VisibilityOutlined} from "@mui/icons-material"
 import { trpc } from "../../utils/trpc"
-import {NextPageWithLayout} from "../_app"
+import type {NextPageWithLayout} from "../_app"
 
 type Inputs = {
     email: string,

@@ -1,12 +1,14 @@
-import { signIn, signOut, useSession } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import Head from "next/head"
 import {useRouter} from "next/router"
-import {ReactElement} from "react"
+import type {ReactElement} from "react"
 import CarouselAndFeatured from "../components/home/CarouselAndFeatured"
 import Footer from "../components/layouts/home/layoutComponents/Footer"
 import Navbar, {TopBar} from "../components/layouts/home/layoutComponents/Navbar"
 import MainLayout from "../components/layouts/home/MainLayout"
-import { CldImage, CldUploadWidget } from 'next-cloudinary'
+// eslint-disable-next-line 
+// @ts-ignore
+import { CldImage} from 'next-cloudinary'
 
 const Home = () => { 
     const { data: session, status } = useSession()

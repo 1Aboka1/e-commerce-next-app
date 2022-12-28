@@ -16,7 +16,7 @@ const CarouselAndFeatured = () => {
 const Carousel = () => {
     return (
 	<div className="basis-3/4 rounded-xl">
-	    <ReactCarousel infiniteLoop interval={5000} autoPlay showStatus={false} stopOnHover={false} transitionTime={500}>
+	    <ReactCarousel infiniteLoop interval={5000} showThumbs={false} autoPlay showStatus={false} stopOnHover={false} transitionTime={500}>
 		<div className="flex flex-row bg-gradient-to-br from-cyan-200 to-blue-500 rounded-xl items-center px-4">
 		    <Image className="" src={HouseholdAppliancesImage} alt='Бытовые товары'/>
 		    <div className="basis-3/4 space-y-2">

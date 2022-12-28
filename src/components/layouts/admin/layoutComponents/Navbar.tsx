@@ -4,24 +4,20 @@ import { AiOutlineUser } from 'react-icons/ai'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { BsFillGridFill } from 'react-icons/bs'
 import { BsSearch } from 'react-icons/bs'
-import { TfiMenuAlt } from 'react-icons/tfi'
 import { IoIosNotifications } from 'react-icons/io'
-import { AiOutlineShoppingCart } from 'react-icons/ai'
-import { MdFavoriteBorder } from 'react-icons/md'
-import { BiMap } from 'react-icons/bi'
 import {useRouter} from "next/router"
-import {signOut, useSession} from "next-auth/react"
+import {useSession} from "next-auth/react"
 import {IconContext} from "react-icons"
 import {darkTheme} from "../../../../styles/themes"
 
 const Navbar = () => {
     const router = useRouter()
-    const { data: session, status } = useSession()
+    const { data: session } = useSession()
     const firstName = session?.user?.name?.substring(0, session?.user.name.indexOf(' '))
 
     return (
 	<ThemeProvider theme={darkTheme}>
-	    <div className="border-b-2 shadow-md sticky top-0 bg-special-slate-component z-50">
+	    <div className="shadow-md sticky top-0 bg-special-slate-component z-50">
 		<div className="bg-special-slate-component mx-auto p-1 px-5 space-y-2">
 		    <div className="flex flex-row items-center justify-between space-x-3">
 			<div className="flex flex-row space-x-4 items-center justify-between w-full">
@@ -39,7 +35,7 @@ const Navbar = () => {
 				}}
 			    />
 			    <div className="flex flex-row space-x-5 items-center">
-				<Button variant='contained' className='bg-tropical-blue-500 rounded-lg text-white font-semibold capitalize'><AiOutlinePlus className="mr-2 font-semibold" size={20}/>Добавить продукт</Button>
+				<Button onClick={() => router.push('/admin/edit_product')} variant='contained' className='bg-tropical-blue-500 rounded-lg text-white font-semibold normal-case'><AiOutlinePlus className="mr-2 font-semibold" size={20}/>Добавить продукт</Button>
 				<BsFillGridFill color="white" size={18} className='cursor-pointer'/>	
 				<IoIosNotifications color="white" size={22} className='cursor-pointer'/>	
 				{

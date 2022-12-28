@@ -1,6 +1,6 @@
 import {InputAdornment, TextField} from "@mui/material"
 import Image from "next/image"
-import Logo from '../../../../public/favicon.png'
+import Logo from '../../../../../public/favicon.png'
 import {type ReactNode} from "react"
 import { AiOutlineUser } from 'react-icons/ai'
 import { BsSearch } from 'react-icons/bs'
@@ -9,12 +9,12 @@ import { AiOutlineShoppingCart } from 'react-icons/ai'
 import { MdFavoriteBorder } from 'react-icons/md'
 import { BiMap } from 'react-icons/bi'
 import {useRouter} from "next/router"
-import {signOut, useSession} from "next-auth/react"
+import {useSession} from "next-auth/react"
 import {IconContext} from "react-icons"
 
 const Navbar = () => {
     const router = useRouter()
-    const { data: session, status } = useSession()
+    const { data: session} = useSession()
     const firstName = session?.user?.name?.substring(0, session?.user.name.indexOf(' '))
 
     return (

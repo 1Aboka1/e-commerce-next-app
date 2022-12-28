@@ -1,30 +1,19 @@
-import { type ReactNode } from "react"
+import type { ReactNode } from "react"
+import { AiOutlineUser } from 'react-icons/ai'
 import {RiDashboard3Line} from "react-icons/ri"
+import { BsFillInboxesFill } from 'react-icons/bs'
 import { motion } from 'framer-motion'
+import { MdOutlineLocalShipping } from 'react-icons/md'
+import {useRouter} from "next/router"
 
 const Sidebar = () => {
     return (
-	<div className="bg-special-slate-component basis-1/6 px-4 py-3 space-y-4 min-h-screen">
-	    <h1 className="font-bold text-2xl text-white tracking-normal">F A S T B U Y</h1>
+	<div className="bg-special-slate-component sticky basis-1/6 px-4 space-y-4 min-h-screen">
+	    <h1 className="font-bold text-2xl mt-3 text-white tracking-normal">F A S T B U Y</h1>
 	    <h1 className="text-special-slate-text font-semibold">Навигация</h1>
 	    <div className="flex flex-col space-y-2">
-		{Tabs.map((tab) => <Tab key={tab.name} name={tab.name} icon={tab.icon}/>)}
+		{Tabs.map((tab) => <Tab key={tab.name} name={tab.name} icon={tab.icon} url={tab.url}/>)}
 	    </div>
-	    <motion.div
-      className="box"
-      animate={{
-        scale: [1, 2, 2, 1, 1],
-        rotate: [0, 0, 180, 180, 0],
-        borderRadius: ["0%", "0%", "50%", "50%", "0%"]
-      }}
-      transition={{
-        duration: 2,
-        ease: "easeInOut",
-        times: [0, 0.2, 0.5, 0.8, 1],
-        repeat: Infinity,
-        repeatDelay: 1
-      }}
-    />
 	</div>
     )
 }
@@ -33,25 +22,48 @@ const Tabs = [
     {
 	name: 'Главная панель',
 	icon: <RiDashboard3Line color="white"/>,
-	onClick: null,
-    }
+	url: '/admin',
+    },
+    {
+	name: 'Продукты',
+	icon: <BsFillInboxesFill color="white"/>,
+	url: '/admin/products',
+    },
+    {
+	name: 'Пользователи',
+	icon: <AiOutlineUser color="white"/>,
+	url: '/admin/users',
+    },
+    {
+	name: 'Заказы',
+	icon: <MdOutlineLocalShipping color="white"/>,
+	url: '/admin/orders',
+    },
 ]
 
-const Tab = ({name, icon}: {name: string, icon: ReactNode}) => {
+const Tab = ({name, icon, url}: {name: string, icon: ReactNode, url: string}) => {
+    const router = useRouter()
+
     return (
-	<motion.div className="flex flex-row space-x-3 items-center cursor-pointer group">
-	    <div className="rounded-full bg-special-slate-icon w-8 h-8 items-center justify-center flex">
+	<motion.div 
+	    className="flex flex-row relative py-2 space-x-3 items-center cursor-pointer group"
+	    onClick={() => { router.push(url) }}
+	>
+	    <div className="rounded-full bg-special-slate-icon z-10 w-8 h-8 items-center justify-center flex">
 		{icon}
 	    </div>
-	    <h1 className="text-special-slate-text group-hover:text-gray-100 transition duration-300 ease-in-out">{name}</h1>
-	    <motion.div 
-		className="absolute bg-white -left-1"
-		animate={{
-		    scale: 1,
-		    borderRadius: "50%",
-		    x: 100,
-		}}
-	    />
+	    <h1 className="text-special-slate-text group-hover:text-gray-100 z-10 transition duration-300 ease-in-out">{name}</h1>
+	    {
+		url === router.pathname ?
+		(
+		    <motion.div 
+			className="absolute bg-black w-60 rounded-3xl h-full z-0"
+			initial={{ left: -500 }}
+			animate={{ left: -50 }}
+			transition={{ duration: 1 }}
+		    />
+		) : null
+	    }
 	</motion.div>
     )
 }

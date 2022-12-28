@@ -4,7 +4,6 @@ import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials";
 import MailRuProvider from 'next-auth/providers/mailru'
 import bcrypt from 'bcryptjs'
-import { EmailProvider } from "next-auth/providers/email.js";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
@@ -38,7 +37,16 @@ export const authOptions: NextAuthOptions = {
 	}),
 	CredentialsProvider({
 	    name: 'Credentials',
-	    credentials: {},
+	    credentials: {
+		email: {
+		    label: 'email',
+		    type: 'text',
+		},
+		password: {
+		    label: 'password',
+		    type: 'text',
+		},
+	    },
 	    async authorize(credentials, req) {
 		const user = await prisma.user.findFirst({
 		    where: {
@@ -48,7 +56,7 @@ export const authOptions: NextAuthOptions = {
 		if(!user) {
 		    throw new Error("No user was found")
 		}
-		const passwordCheck = bcrypt.compare(credentials?.password, user.password)
+		const passwordCheck = bcrypt.compare(credentials?.password as string, user.password as string)
 		if(!passwordCheck) {
 		    throw new Error('Email or password doesn\'t match')
 		}
