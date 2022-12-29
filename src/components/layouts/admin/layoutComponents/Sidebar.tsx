@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import { AiOutlineUser } from 'react-icons/ai'
 import {RiDashboard3Line} from "react-icons/ri"
+import { BiCategory } from 'react-icons/bi'
 import { BsFillInboxesFill } from 'react-icons/bs'
 import { motion } from 'framer-motion'
 import { MdOutlineLocalShipping } from 'react-icons/md'
@@ -28,6 +29,11 @@ const Tabs = [
 	name: 'Продукты',
 	icon: <BsFillInboxesFill color="white"/>,
 	url: '/admin/products',
+    },
+    {
+	name: 'Категории',
+	icon: <BiCategory color="white"/>,
+	url: '/admin/categories',
     },
     {
 	name: 'Пользователи',
