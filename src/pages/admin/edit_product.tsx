@@ -1,5 +1,5 @@
 import {Button, TextField} from "@mui/material"
-import {cloneElement, type ReactElement, type ReactNode} from "react"
+import {cloneElement, useState, type ReactElement, type ReactNode} from "react"
 import MainLayout from "../../components/layouts/admin/MainLayout"
 import * as yup from 'yup'
 import {useForm} from "react-hook-form"
@@ -42,12 +42,15 @@ const EditProduct = () => {
 }
 
 const ImageUploadWidget = ({ setValue, getValues }: any) => {
+    const [cloudinaryServerResponed, setCloudinaryServerResponded] = useState(false)
+
     return (
 	<div className="flex flex-col justify-center space-y-3">
 	    <CldUploadWidget 
 		uploadPreset='rvp1ymu8'
-		onUpload={(error, result, widget) => {
+		onUpload={(error: unknown, result: unknown, widget: unknown) => {
 		    setValue('image', result?.info.url); // Updating local state with asset details
+		    setCloudinaryServerResponded(true)
 		}}
 	    >
 	      {({ open }: any) => {
@@ -66,12 +69,16 @@ const ImageUploadWidget = ({ setValue, getValues }: any) => {
 		);
 	      }}
 	    </CldUploadWidget>
-	    <CldImage 
-		src={getValues().image}
-		width="400"
-		height="200"
-		alt='photo'
-	    />
+	    {
+		cloudinaryServerResponed ?
+		    <CldImage 
+			src={getValues().image}
+			width="400"
+			height="200"
+			alt='photo'
+		    />
+		: null
+	    }
 	</div>
     )
 }
