@@ -35,7 +35,7 @@ const Navbar = () => {
 				}}
 			    />
 			    <div className="flex flex-row space-x-5 items-center">
-				<Button onClick={() => router.push('/admin/edit_product')} variant='contained' className='bg-tropical-blue-500 rounded-lg text-white font-semibold normal-case'><AiOutlinePlus className="mr-2 font-semibold" size={20}/>Добавить продукт</Button>
+				<Button onClick={() => router.push('/admin/products/edit_product')} variant='contained' className='bg-tropical-blue-500 rounded-xl text-white font-semibold normal-case'><AiOutlinePlus className="mr-2 font-semibold" size={20}/>Добавить продукт</Button>
 				<BsFillGridFill color="white" size={18} className='cursor-pointer'/>	
 				<IoIosNotifications color="white" size={22} className='cursor-pointer'/>	
 				{

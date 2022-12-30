@@ -1,11 +1,10 @@
 import {Button, TextField} from "@mui/material"
-import {cloneElement, useState, type ReactElement, type ReactNode} from "react"
-import MainLayout from "../../components/layouts/admin/MainLayout"
+import { cloneElement, useState, } from "react"
+import type { ReactElement, ReactNode } from 'react'
+import MainLayout from "../../../components/layouts/admin/MainLayout"
 import * as yup from 'yup'
 import {useForm} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
-// eslint-ignore-next-line
-// @ts-ignore
 import { CldUploadWidget, CldImage } from 'next-cloudinary'
 
 const EditProduct = () => {
@@ -49,6 +48,8 @@ const ImageUploadWidget = ({ setValue, getValues }: any) => {
 	    <CldUploadWidget 
 		uploadPreset='rvp1ymu8'
 		onUpload={(error: unknown, result: unknown, widget: unknown) => {
+		    {/*esline-disable-next-line
+		     @ts-ignore*/}
 		    setValue('image', result?.info.url); // Updating local state with asset details
 		    setCloudinaryServerResponded(true)
 		}}

@@ -1,8 +1,8 @@
 import {useRouter} from "next/router"
 import type {ReactElement} from "react"
-import MainLayout from "../../../components/layouts/admin/MainLayout"
+import MainLayout from "../../../../../components/layouts/admin/MainLayout"
 
-const Filters = () => {
+const EditSubcategory = () => {
     const router = useRouter()
 
     return (
@@ -11,7 +11,7 @@ const Filters = () => {
     ) 
 }
 
-Filters.getLayout = function getLayout(page: ReactElement) {
+EditSubcategory.getLayout = function getLayout(page: ReactElement) {
     return (
 	<>
 	    <MainLayout>
@@ -21,4 +21,4 @@ Filters.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default Filters
+export default EditSubcategory

@@ -1,47 +1,46 @@
 import {Button, TextField} from "@mui/material"
-import {cloneElement, useState, type ReactElement, type ReactNode} from "react"
-import MainLayout from "../../../components/layouts/admin/MainLayout"
-import { trpc } from "../../../utils/trpc"
+import type { ReactElement } from "react"
+import { useState } from "react"
+import MainLayout from "../../../../../components/layouts/admin/MainLayout"
+import { trpc } from "../../../../../utils/trpc"
 import * as yup from 'yup'
 import {useForm} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
-// eslint-ignore-next-line
-// @ts-ignore
 import { CldUploadWidget, CldImage } from 'next-cloudinary'
 import { AnimatePresence, motion } from "framer-motion"
 import {useRouter} from "next/router"
 
-const EditCategory = () => {
+const NewSubcategory = () => {
     const router = useRouter()
     const {
 	register,
 	handleSubmit,
 	setValue,
 	getValues,
-	clearErrors,
 	formState: { errors },
     } = useForm<Inputs>({
 	resolver: yupResolver(validationSchema)
     })
     
-    const createCategory = trpc.category.createCategory.useMutation()
+    const createSubcategory = trpc.category.createSubcategory.useMutation()
     const onFormSubmit = handleSubmit((data) => {
-	createCategory
+	createSubcategory
 	    .mutateAsync({
 		name: data.name,
 		description: data.description,
 		image: data.image,
+		categoryId: 
 	    })
-	    .then((response) => {
+	    .then(() => {
 		router.push('/admin/categories')	
 	    })
     })
 
     return(
 	<div className="flex flex-col space-y-5 min-h-screen mb-8">
-	    <h1 className="text-white font-semibold text-xl">Редактировать категории</h1>
+	    <h1 className="text-white font-semibold text-xl">Добавить подкатегорию</h1>
 	    <div className="bg-special-slate-component rounded-xl p-3 px-5 space-y-5">
-		<h1 className="text-gray-400 font-medium text-md">Заполните данные о категории</h1>
+		<h1 className="text-gray-400 font-medium text-md">Заполните данные о подкатегории</h1>
 		<div className="space-y-5">
 		    <div className="space-y-3">
 			<h1 className="text-white text-sm">Название</h1>
@@ -50,7 +49,7 @@ const EditCategory = () => {
 			    {...register('name', { required: true })}
 			    variant="outlined" 
 			    size="small" 
-			    placeholder={'Название продукта'} 
+			    placeholder={'Название подкатегории'} 
 			    fullWidth
 			    color={errors.name && 'error'}
 			/>
@@ -63,7 +62,7 @@ const EditCategory = () => {
 			    variant="outlined" 
 			    size='small' 
 			    multiline 
-			    placeholder="Описание продукта" 
+			    placeholder="Описание подкатегории" 
 			    fullWidth 
 			    rows={4}
 			    color={errors.description && 'error'}
@@ -99,7 +98,9 @@ const ImageUploadWidget = ({ setValue, getValues }: any) => {
 	    <CldUploadWidget 
 		uploadPreset='rvp1ymu8'
 		onUpload={(error: unknown, result: unknown, widget: unknown) => {
-		    setValue('image', result?.info.url); // Updating local state with asset details
+		    {/*esline-disable-next-line
+		     @ts-ignore*/}
+		    setValue('image', result?.info.url)
 		    setCloudinaryServerResponded(true)
 		}}
 	    >
@@ -170,7 +171,7 @@ const FieldError = ({ error }: any) => {
     }
 }
 
-EditCategory.getLayout = function getLayout(page: ReactElement) {
+NewSubcategory.getLayout = function getLayout(page: ReactElement) {
     return (
 	<>
 	    <MainLayout>
@@ -180,4 +181,4 @@ EditCategory.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default EditCategory
+export default NewSubcategory

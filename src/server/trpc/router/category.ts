@@ -22,5 +22,34 @@ export const categoryRouter = router({
 	    } catch(error) {
 		console.error(error)
 	    }
+	}),
+    createSubcategory: protectedProcedure
+	.input(
+	    z.object({
+		name: z.string(),
+		description: z.string(),
+		image: z.string(),
+		categoryId: z.string(),
+	    })
+	)
+	.mutation(async ({ ctx, input }) => {
+	    try {
+		await ctx.prisma.category.update({
+		    where: {
+			id: input.categoryId,
+		    },
+		    data: {
+			subcategories: {
+			    create: {
+				name: input.name,
+				description: input.description,
+				image: input.image,
+			    }
+			}
+		    }
+		})
+	    } catch(error) {
+		console.error(error)
+	    }
 	})
 });

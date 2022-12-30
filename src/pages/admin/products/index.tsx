@@ -1,5 +1,5 @@
 import type {ReactElement} from "react"
-import MainLayout from "../../components/layouts/admin/MainLayout"
+import MainLayout from "../../../components/layouts/admin/MainLayout"
 
 const Products = () => {
     return(
