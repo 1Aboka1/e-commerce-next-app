@@ -1,11 +1,9 @@
 import { Breadcrumbs, ThemeProvider } from "@mui/material"
 import Link from "next/link"
-import {useRouter} from "next/router"
+import type {ReactElement} from "react"
 import {darkTheme} from "../../../../styles/themes"
 
-const BreadCrumb = () => {
-    const router = useRouter()
-
+const BreadCrumb = ({ links }: { links: any }) => {
     return (
 	<ThemeProvider theme={darkTheme}>
 	    <div className="">
@@ -13,6 +11,7 @@ const BreadCrumb = () => {
 		    <Link href={'/admin'}>
 			Главная панель	
 		    </Link>
+		    {links}
 		</Breadcrumbs>
 	    </div>
 	</ThemeProvider>

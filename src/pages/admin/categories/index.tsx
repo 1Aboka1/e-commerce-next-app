@@ -91,6 +91,7 @@ const TableView = ({ categories }: { categories: Category[] }) => {
 	      <DataGrid
 		rows={categories}
 		columns={columns}
+		className='cursor-pointer'
 		pageSize={5}
 		rowsPerPageOptions={[5]}
 		onCellClick={(params) => {
