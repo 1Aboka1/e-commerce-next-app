@@ -1,16 +1,31 @@
 import {Button, TextField} from "@mui/material"
+import { useEffect } from "react"
 import type { ReactElement } from "react"
 import { useState } from "react"
-import MainLayout from "../../../../../components/layouts/admin/MainLayout"
-import { trpc } from "../../../../../utils/trpc"
+import MainLayout from "../../../../../../components/layouts/admin/MainLayout"
+import { trpc } from "../../../../../../utils/trpc"
 import * as yup from 'yup'
 import {useForm} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
 import { CldUploadWidget, CldImage } from 'next-cloudinary'
 import { AnimatePresence, motion } from "framer-motion"
+import { prisma } from "../../../../../../server/db/client"
 import {useRouter} from "next/router"
+import type {GetServerSideProps, InferGetServerSidePropsType} from "next"
 
-const NewSubcategory = () => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+    const subcategory = await prisma.subcategory.findUnique({
+	where: {
+	    id: params?.subcategory_id as string,
+	}
+    }) 
+
+    return {
+	props: { subcategory: JSON.parse(JSON.stringify(subcategory)) }
+    }
+}
+
+const EditSubcategory = ({ subcategory }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter()
     const {
 	register,
@@ -21,6 +36,14 @@ const NewSubcategory = () => {
     } = useForm<Inputs>({
 	resolver: yupResolver(validationSchema)
     })
+    const [imageShouldUpdate, setImageShouldUpdate] = useState(false)
+
+    useEffect(() => {
+	setValue('name', subcategory.name)
+	setValue('description', subcategory.description)
+	setValue('image', subcategory.image)
+	setImageShouldUpdate(true)
+    }, [])
     
     const createSubcategory = trpc.category.createSubcategory.useMutation()
     const onFormSubmit = handleSubmit((data) => {
@@ -29,10 +52,10 @@ const NewSubcategory = () => {
 		name: data.name,
 		description: data.description,
 		image: data.image,
-		categoryId: 
+		categoryId: router.query.category_id as string,
 	    })
 	    .then(() => {
-		router.push('/admin/categories')	
+		router.push('/admin/categories/' + router.query.category_id)	
 	    })
     })
 
@@ -74,6 +97,8 @@ const NewSubcategory = () => {
 			<ImageUploadWidget
 			    setValue={setValue}
 			    getValues={getValues}
+			    imageShouldUpdate={imageShouldUpdate}
+			    setImageShouldUpdate={setImageShouldUpdate}
 			/>
 		    </div>
 		</div>
@@ -90,9 +115,7 @@ const NewSubcategory = () => {
     )
 }
 
-const ImageUploadWidget = ({ setValue, getValues }: any) => {
-    const [cloudinaryServerResponed, setCloudinaryServerResponded] = useState(false)
-
+const ImageUploadWidget = ({ setValue, getValues, imageShouldUpdate, setImageShouldUpdate }: any) => {
     return (
 	<div className="flex flex-col justify-center space-y-3">
 	    <CldUploadWidget 
@@ -101,7 +124,7 @@ const ImageUploadWidget = ({ setValue, getValues }: any) => {
 		    {/*esline-disable-next-line
 		     @ts-ignore*/}
 		    setValue('image', result?.info.url)
-		    setCloudinaryServerResponded(true)
+		    setImageShouldUpdate(true)
 		}}
 	    >
 	      {({ open }: any) => {
@@ -121,7 +144,7 @@ const ImageUploadWidget = ({ setValue, getValues }: any) => {
 	      }}
 	    </CldUploadWidget>
 	    {
-		cloudinaryServerResponed ?
+		imageShouldUpdate ?
 		    <CldImage 
 			src={getValues().image}
 			width="400"
@@ -171,7 +194,7 @@ const FieldError = ({ error }: any) => {
     }
 }
 
-NewSubcategory.getLayout = function getLayout(page: ReactElement) {
+EditSubcategory.getLayout = function getLayout(page: ReactElement) {
     return (
 	<>
 	    <MainLayout>
@@ -181,4 +204,4 @@ NewSubcategory.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default NewSubcategory
+export default EditSubcategory

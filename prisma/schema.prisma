@@ -94,10 +94,10 @@ model Subcategory {
     id            String    @id @default(cuid())
 	name		String
 	description	String
+	image		String?
 	createdAt 	DateTime 	@default(now())
 	updatedAt 	DateTime 	@updatedAt
 	category	Category	@relation(fields: [categoryId], references: [id])
-	image		String
 	categoryId	String
 	filters 	Filter[]
 	products	Product[]

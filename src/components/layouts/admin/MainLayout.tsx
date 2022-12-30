@@ -3,6 +3,7 @@ import { ThemeProvider } from "@mui/material"
 import { darkTheme } from "../../../styles/themes"
 import Navbar from "./layoutComponents/Navbar"
 import Sidebar from "./layoutComponents/Sidebar"
+import BreadCrumb from "./layoutComponents/BreadCrumb"
 
 const MainLayout = ({ children }: {children: ReactElement}) => {
     return (
@@ -11,7 +12,8 @@ const MainLayout = ({ children }: {children: ReactElement}) => {
 		<Sidebar/>
 		<div className="flex flex-col grow">
 		    <Navbar/>
-		    <div className="bg-black lg:w-[1050px] lg:mt-8 mx-auto">
+		    <div className="bg-black space-y-3 lg:w-[1050px] lg:mt-5 mx-auto">
+			<BreadCrumb/>
 			{children} 
 		    </div>
 		</div>

@@ -2,7 +2,7 @@ import {useRouter} from "next/router"
 import type {ReactElement} from "react"
 import MainLayout from "../../../../../components/layouts/admin/MainLayout"
 
-const EditSubcategory = () => {
+const Subcategory = () => {
     const router = useRouter()
 
     return (
@@ -11,7 +11,7 @@ const EditSubcategory = () => {
     ) 
 }
 
-EditSubcategory.getLayout = function getLayout(page: ReactElement) {
+Subcategory.getLayout = function getLayout(page: ReactElement) {
     return (
 	<>
 	    <MainLayout>
@@ -21,4 +21,4 @@ EditSubcategory.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default EditSubcategory
+export default Subcategory
