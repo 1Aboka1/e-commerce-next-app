@@ -61,7 +61,7 @@ const EditSubcategory = ({ subcategory }: InferGetServerSidePropsType<typeof get
 
     return(
 	<div className="flex flex-col space-y-5 min-h-screen mb-8">
-	    <h1 className="text-white font-semibold text-xl">Добавить подкатегорию</h1>
+	    <h1 className="text-white font-semibold text-xl">Редактировать подкатегорию</h1>
 	    <div className="bg-special-slate-component rounded-xl p-3 px-5 space-y-5">
 		<h1 className="text-gray-400 font-medium text-md">Заполните данные о подкатегории</h1>
 		<div className="space-y-5">

@@ -1,15 +1,29 @@
-import {Button, TextField} from "@mui/material"
-import { cloneElement, useState, } from "react"
+import {Button, ListSubheader, MenuItem, Select, TextField} from "@mui/material"
+import { cloneElement, Fragment, useState, } from "react"
 import type { ReactElement, ReactNode } from 'react'
-import MainLayout from "../../../components/layouts/admin/MainLayout"
+import MainLayout from "../../../../components/layouts/admin/MainLayout"
 import * as yup from 'yup'
 import {useForm} from "react-hook-form"
 import {yupResolver} from "@hookform/resolvers/yup"
 import { CldUploadWidget, CldImage } from 'next-cloudinary'
 import { AnimatePresence, motion } from "framer-motion"
-import ImageUploadWidget from "../../../components/ImageUploadWidget"
+import ImageUploadWidget from "../../../../components/ImageUploadWidget"
+import { prisma } from "../../../../server/db/client"
+import {GetServerSideProps, InferGetServerSidePropsType} from "next"
 
-const EditProduct = () => {
+export const getServerSideProps: GetServerSideProps = async () => {
+    const categories = await prisma.category.findMany({
+	include: {
+	    subcategories: true,
+	},
+    })
+
+    return {
+	props: { categories: JSON.parse(JSON.stringify(categories)) }
+    }
+} 
+
+const EditProduct = ({ categories }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const {
 	register,
 	handleSubmit,
@@ -20,7 +34,6 @@ const EditProduct = () => {
     } = useForm<Inputs>({
 	resolver: yupResolver(validationSchema)
     })
-
     const [imageShouldUpdate, setImageShouldUpdate] = useState(false)
 
     return(
@@ -89,6 +102,64 @@ const EditProduct = () => {
 			    setImageShouldUpdate={setImageShouldUpdate}
 			/>
 		    </div>
+		    <div className="space-y-3">
+			<h1 className="text-white text-sm">{'Категория товара'}</h1>
+			<FieldError error={errors.subcategoryId}/>
+			<Select
+			    color={errors.subcategoryId && 'error'}
+			    fullWidth
+			    size="small"
+			    placeholder="Выберите категорию товара"
+			    className="rounded-xl"
+			    value={getValues('subcategoryId')}
+			    onChange={(event) => { setValue('subcategoryId', event.target.value) }}
+			>
+			    {
+				categories.map((category: typeof categories[0]) => [
+					    <ListSubheader key={category.id}>{category.name}</ListSubheader>,
+					    category.subcategories.map((subcategory: typeof category.subcategories[0]) => {
+						return (
+						    <MenuItem 
+							key={subcategory.id}
+							value={subcategory.id}
+						    >
+							{subcategory.name}
+						    </MenuItem> 
+						)
+					    })
+				])
+			    }
+			</Select>
+		    </div>
+		    <div className="space-y-3">
+			<h1 className="text-white text-sm">{'Фильтры товара'}</h1>
+			<FieldError error={errors.filters}/>
+			<Select
+			    color={errors.filters && 'error'}
+			    fullWidth
+			    size="small"
+			    placeholder="Выберите фильтры товара"
+			    className="rounded-xl"
+			    value={getValues('filters')}
+			    onChange={(event) => { setValue('filters', event.target.value) }}
+			>
+			    {
+				categories.map((category: typeof categories[0]) => [
+					    <ListSubheader key={category.id}>{category.name}</ListSubheader>,
+					    category.subcategories.map((subcategory: typeof category.subcategories[0]) => {
+						return (
+						    <MenuItem 
+							key={subcategory.id}
+							value={subcategory.id}
+						    >
+							{subcategory.name}
+						    </MenuItem> 
+						)
+					    })
+				])
+			    }
+			</Select>
+		    </div>
 		</div>
 	    </div> 
 	    <Button onClick={() => console.log(getValues())} variant="outlined" className="rounded-xl h-12 normal-case">Загрузить товар</Button>
@@ -102,7 +173,7 @@ type Inputs = {
     price: number,
     quantityLeft: number,
     image: string,
-    subcategoryId: null,
+    subcategoryId: string,
     filters: null,
 }
 

@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     }
 }
 
-const Category = ({ category, subcategories }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Filters = ({ category, subcategories }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter()
 
     return(
@@ -190,7 +190,7 @@ const TableView = ({ subcategories }: { subcategories: Subcategory[] }) => {
     )
 }
 
-Category.getLayout = function getLayout(page: ReactElement) {
+Filters.getLayout = function getLayout(page: ReactElement) {
     return (
 	<>
 	    <MainLayout>
@@ -200,4 +200,4 @@ Category.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default Category
+export default Filters
