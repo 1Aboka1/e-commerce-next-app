@@ -1,71 +1,80 @@
 import type {ReactElement} from "react"
 import { CldImage } from 'next-cloudinary'
-import MainLayout from "../../../../components/layouts/admin/MainLayout"
+import MainLayout from "../../../../../../components/layouts/admin/MainLayout"
 import { AiOutlineArrowRight } from 'react-icons/ai'
 import { AiOutlineEdit } from 'react-icons/ai'
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next"
-import { prisma } from "../../../../server/db/client"
+import { prisma } from "../../../../../../server/db/client"
 import type { Subcategory } from "@prisma/client"
 import {Button, ThemeProvider} from "@mui/material"
 import {useRouter} from "next/router"
 import {AiOutlinePlus} from "react-icons/ai"
 import {DataGrid, GridColDef} from "@mui/x-data-grid"
-import {darkTheme} from "../../../../styles/themes"
+import {darkTheme} from "../../../../../../styles/themes"
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-    const category = await prisma.category.findFirstOrThrow({
+    const subcategory = await prisma.subcategory.findFirst({
 	where: {
-	    id: params?.category_id as string,
+	    id: params?.subcategory_id as string,
 	}
     })
-    const subcategories = await prisma.subcategory.findMany({
+
+    const filters = await prisma.filter.findMany({
 	where: {
-	    categoryId: params?.id as string,
+	    subcategoryId: params?.subcategory_id as string,
 	}
     })
 
     return {
 	props: { 
-	    category: JSON.parse(JSON.stringify(category)),
-	    subcategories: JSON.parse(JSON.stringify(subcategories)),
+	    filters: JSON.parse(JSON.stringify(filters)),
+	    subcategory: JSON.parse(JSON.stringify(subcategory)),
+	    categoryId: params?.category_id,
 	},
     }
 }
 
-const Category = ({ category, subcategories }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Filters = ({ filters, subcategory, categoryId }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter()
 
     return(
 	<div className="flex flex-col space-y-5 min-h-screen mb-8">
 	    <div className="flex flex-row justify-between">
-		<h1 className="text-white font-semibold text-xl">{category.name}</h1>
+		<h1 className="text-white font-semibold text-xl">{subcategory.name}</h1>
 		<div className="flex flex-col space-y-2">
 		    <Button 
 			onClick={() => router.push(
 			    '/admin/categories/' + 
-			    router.query.category_id + 
-			    '/subcategory/edit_subcategory'
+			    categoryId +
+			    '/subcategory/' +
+			    subcategory.id +
+			    '/filters/edit_filter'
 			)} 
 			variant='outlined' 
 			className='rounded-xl text-white font-semibold normal-case'
 		    >
 			<AiOutlinePlus className="mr-2 font-semibold" size={20}/>
-			Добавить подкатегорию
+			Добавить фильтр
 		    </Button>
 		    <Button 
-			onClick={() => router.push('/admin/categories/edit_category/' + category.id)} 
+			onClick={() => router.push(
+			    '/admin/categories/' + 
+			    categoryId +
+			    '/subcategory/edit_subcategory/' +
+			    subcategory.id
+			)} 
 			variant='outlined' 
 			className='rounded-xl text-white font-semibold normal-case'
 		    >
 			<AiOutlineEdit className="mr-2 font-semibold" size={20}/>
-			Редактировать категорию
+			Редактировать подкатегорию
 		    </Button>
 		</div>
 	    </div>
 	    <div className="bg-special-slate-component rounded-xl p-3 px-5 space-y-5">
 		<div className="space-y-5">
 		    <TableView
-			subcategories={subcategories}
+			subcategories={filters}
 		    />
 		</div>
 	    </div> 
@@ -139,13 +148,7 @@ const TableView = ({ subcategories }: { subcategories: Subcategory[] }) => {
 		    <Button
 			className='normal-case rounded-xl items-center'
 			variant="outlined"
-			onClick={() => {
-			    router.push('/admin/categories/' +
-				router.query.category_id +
-				'/subcategory/' +
-				params.row.id
-			    )
-			}}
+			onClick={() => {console.log('c')}}
 		    >
 			Фильтры
 			<AiOutlineArrowRight className="ml-2"/>
@@ -196,7 +199,7 @@ const TableView = ({ subcategories }: { subcategories: Subcategory[] }) => {
     )
 }
 
-Category.getLayout = function getLayout(page: ReactElement) {
+Filters.getLayout = function getLayout(page: ReactElement) {
     return (
 	<>
 	    <MainLayout>
@@ -206,4 +209,4 @@ Category.getLayout = function getLayout(page: ReactElement) {
     )
 }
 
-export default Category
+export default Filters
