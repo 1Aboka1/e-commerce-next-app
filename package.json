@@ -44,6 +44,7 @@
     "react-icons": "^4.7.1",
     "react-responsive-carousel": "^3.2.23",
     "react-social-icons": "^5.15.0",
+    "rsuite": "^5.24.0",
     "superjson": "1.9.1",
     "ts-node": "^10.9.1",
     "yup": "^0.32.11",
